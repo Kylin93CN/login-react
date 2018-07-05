@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import App from './components/App';
+import NavigationBar from './components/NavigationBar';
 import registerServiceWorker from './registerServiceWorker';
 import logger from 'redux-logger';
 
@@ -19,7 +20,7 @@ const store = createStore(
 
 ReactDOM.render(
   <Provider store={ store }>
-    <App />
+    <NavigationBar/>
   </Provider>, 
 document.getElementById('root'));
 registerServiceWorker();
