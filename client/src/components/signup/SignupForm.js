@@ -1,4 +1,5 @@
 import React, { Component } from 'react'; //rccc
+import PropTypes from 'prop-types';
 
 export default class SignupForm extends Component {
   constructor(props) {
@@ -10,6 +11,9 @@ export default class SignupForm extends Component {
       passwordConfirm:'',
     };
   }
+  static propTypes = {
+    userSignipRequest: PropTypes.func.isRequired
+  }
   _onChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value
@@ -17,6 +21,7 @@ export default class SignupForm extends Component {
   }
   _submit = (e) => {
     e.preventDefault();
+    // axios.post('/api/users',{ user: this.state });
     console.log(this.state);
   }
   render() {
