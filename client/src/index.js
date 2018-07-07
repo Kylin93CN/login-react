@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/App';
 import NavigationBar from './components/NavigationBar';
 import registerServiceWorker from './registerServiceWorker';
 import logger from 'redux-logger';
