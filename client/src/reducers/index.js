@@ -1,4 +1,4 @@
-import { cobineReduces, combineReducers} from 'redux';
+import { combineReducers} from 'redux';
 
 import auth from './auth';
 

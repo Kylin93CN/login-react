@@ -2,7 +2,7 @@ import express from 'express';
 
 let app = express();
 app.get('/',(req,res) =>{
-    res.send('hello !');
+    res.send('hello port 5000!');
 });
 
-app.listen(3000,() => console.log('Running on port 3000!'));
+app.listen(5000,() => console.log('Running on port 5000!'));
