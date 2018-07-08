@@ -12,7 +12,7 @@ export default class SignupForm extends Component {
     };
   }
   static propTypes = {
-    userSignipRequest: PropTypes.func.isRequired
+    userSignupRequest: PropTypes.func.isRequired
   }
   _onChange = (e) => {
     this.setState({
@@ -21,8 +21,7 @@ export default class SignupForm extends Component {
   }
   _submit = (e) => {
     e.preventDefault();
-    // axios.post('/api/users',{ user: this.state });
-    console.log(this.state);
+    this.props.userSignupRequest(this.state);
   }
   render() {
     return (
