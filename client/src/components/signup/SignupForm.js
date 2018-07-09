@@ -1,5 +1,6 @@
 import React, { Component } from 'react'; //rccc
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 
 export default class SignupForm extends Component {
   constructor(props) {
@@ -9,6 +10,8 @@ export default class SignupForm extends Component {
       email:'',
       password:'',
       passwordConfirm:'',
+      errors: {},
+      isLoading: false,
     };
   }
   static propTypes = {
@@ -21,9 +24,23 @@ export default class SignupForm extends Component {
   }
   _submit = (e) => {
     e.preventDefault();
-    this.props.userSignupRequest(this.state);
+    this.setState({
+      errors: {},
+      isLoading: true,
+    });
+    // this.props.userSignupRequest(this.state);
+    this.props.userSignupRequest(this.state).then(
+      () => {},
+      (response) => {
+        this.setState({
+          errors: response.response.data,
+          isLoading: false,
+        });
+      }
+    );
   }
   render() {
+    const { errors } = this.state;
     return (
       <form onSubmit={this._submit}>
         <h1>Welcome to our community!</h1>
@@ -34,8 +51,9 @@ export default class SignupForm extends Component {
             name="username"
             value={this.state.username}
             onChange={this._onChange}
-            className="form-control"
+            className={ classnames("form-control", { 'is-invalid': errors.username }) }
           />
+          {errors.username && <span className="form-text text-muted">{errors.username}</span>}
         </div>
         <div className="form-group">
           <label className="control-label">Email</label>
@@ -44,8 +62,9 @@ export default class SignupForm extends Component {
             name="email"
             value={this.state.email}
             onChange={this._onChange}
-            className="form-control"
+            className={ classnames("form-control", { 'is-invalid': errors.email }) }
           />
+          {errors.email && <span className="form-text text-muted">{errors.email}</span>}
         </div>
         <div className="form-group">
           <label className="control-label">Password</label>
@@ -54,8 +73,9 @@ export default class SignupForm extends Component {
             name="password"
             value={this.state.password}
             onChange={this._onChange}
-            className="form-control"
+            className={ classnames("form-control", { 'is-invalid': errors.password }) }
           />
+          {errors.password && <span className="form-text text-muted">{errors.password}</span>}
         </div>
         <div className="form-group">
           <label className="control-label">Password Confirmation</label>
@@ -64,11 +84,12 @@ export default class SignupForm extends Component {
             name="passwordConfirm"
             value={this.state.passwordConfirm}
             onChange={this._onChange}
-            className="form-control"
+            className={ classnames("form-control", { 'is-invalid': errors.passwordConfirm }) }
           />
+          {errors.passwordConfirm && <span className="form-text text-muted">{errors.passwordConfirm}</span>}
         </div>
         <div className="form-group">
-          <button className="btn btn-primary btn-lg">
+          <button disabled={this.state.isLoading} className="btn btn-primary btn-lg">
             Sign up
           </button>
         </div>

@@ -8,11 +8,15 @@ function validatorInputValue(data){
   let errors = {};
 
   if(validator.isEmpty(data.username)){
-    errors.usermame = "The field is Required!";
+    errors.username = "The field is Required!";
   }
 
   if(validator.isEmpty(data.email)){
     errors.email = "The field is Required!";
+  }
+
+  if(validator.isEmail(data.email)){
+    errors.email = "Email is invalid!";
   }
 
   if(validator.isEmpty(data.password)){
@@ -21,6 +25,10 @@ function validatorInputValue(data){
 
   if(validator.isEmpty(data.passwordConfirm)){
     errors.passwordConfirm = "The field is Required!";
+  }
+
+  if(!validator.equals(data.password, data.passwordConfirm)){
+    errors.passwordConfirm = "Passwords must match!";
   }
 
   return {
