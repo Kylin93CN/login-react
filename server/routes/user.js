@@ -16,7 +16,7 @@ function validatorInputValue(data){
     errors.email = "The field is Required!";
   }
 
-  if(validator.isEmail(data.email)){
+  if(!validator.isEmail(data.email)){
     errors.email = "Email is invalid!";
   }
 
@@ -34,16 +34,19 @@ function validatorInputValue(data){
 
   return {
     errors,
-    isValid: isEmpty(data)
+    isValid: isEmpty(errors)
   }
 }
 
 router.post('/',(req, res) => {
   const { errors, isValid } = validatorInputValue(req.body);
   //校验失败返回403
+  console.dir(isValid);
   if(!isValid) {
     res.status(403).json(errors);
   }
+  // 成功情况
+  res.json({ success: true });
 });
 
 export default router;

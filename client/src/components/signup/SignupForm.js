@@ -35,7 +35,9 @@ export default class SignupForm extends Component {
     
     // 发送请求
     this.props.userSignupRequest(this.state).then(
-      () => {},
+      () => {
+        this.props.history.push('/'); //跳转方式1
+      },
       (response) => {
         this.setState({
           errors: response.response.data,

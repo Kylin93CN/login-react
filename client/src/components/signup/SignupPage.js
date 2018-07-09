@@ -13,7 +13,8 @@ class SignupPage extends Component {
       <div className="row">
         <div className="col-md-3"></div>
         <div className="col-md-6">
-          <SignupForm userSignupRequest={this.props.userSignupRequest}/>
+          {/* 跳转方式1 */}
+          <SignupForm history={ this.props.history } userSignupRequest={this.props.userSignupRequest}/>
         </div>
         <div className="col-md-3"></div>
       </div>
