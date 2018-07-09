@@ -14,21 +14,26 @@ export default class SignupForm extends Component {
       isLoading: false,
     };
   }
+
   static propTypes = {
     userSignupRequest: PropTypes.func.isRequired
   }
+
+  // 文本change事件
   _onChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value
     });
   }
+  // post提交事件
   _submit = (e) => {
     e.preventDefault();
     this.setState({
       errors: {},
       isLoading: true,
     });
-    // this.props.userSignupRequest(this.state);
+    
+    // 发送请求
     this.props.userSignupRequest(this.state).then(
       () => {},
       (response) => {

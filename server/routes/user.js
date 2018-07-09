@@ -4,6 +4,7 @@ import validator from 'validator';
 
 let router = express.Router();
 
+// 信息校验
 function validatorInputValue(data){
   let errors = {};
 
@@ -39,6 +40,7 @@ function validatorInputValue(data){
 
 router.post('/',(req, res) => {
   const { errors, isValid } = validatorInputValue(req.body);
+  //校验失败返回403
   if(!isValid) {
     res.status(403).json(errors);
   }
