@@ -1,8 +1,9 @@
 import React, { Component } from 'react'; //rccc
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { withRouter } from 'react-router-dom'; /* 跳转方式2 */
 
-export default class SignupForm extends Component {
+class SignupForm extends Component {
   constructor(props) {
     super(props);
     this.state={
@@ -36,7 +37,7 @@ export default class SignupForm extends Component {
     // 发送请求
     this.props.userSignupRequest(this.state).then(
       () => {
-        this.props.history.push('/'); //跳转方式1
+        this.props.history.push('/'); //跳转方式1/2
       },
       (response) => {
         this.setState({
@@ -104,3 +105,5 @@ export default class SignupForm extends Component {
     )
   }
 };
+
+export default withRouter(SignupForm);
