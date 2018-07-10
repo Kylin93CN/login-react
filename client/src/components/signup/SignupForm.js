@@ -1,7 +1,7 @@
 import React, { Component } from 'react'; //rccc
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { withRouter } from 'react-router-dom'; /* 跳转方式2 */
+// import { withRouter } from 'react-router-dom'; /* 跳转方式2 */
 
 class SignupForm extends Component {
   constructor(props) {
@@ -16,8 +16,13 @@ class SignupForm extends Component {
     };
   }
 
+  static contextTypes = {
+    router: PropTypes.object
+  }
+
   static propTypes = {
-    userSignupRequest: PropTypes.func.isRequired
+    userSignupRequest: PropTypes.func.isRequired,
+    addFlashMessage: PropTypes.func.isRequired
   }
 
   // 文本change事件
@@ -37,7 +42,12 @@ class SignupForm extends Component {
     // 发送请求
     this.props.userSignupRequest(this.state).then(
       () => {
-        this.props.history.push('/'); //跳转方式1/2
+        // this.props.history.push('/'); //跳转方式1/2
+        this.props.addFlashMessage({
+          type: 'success',
+          text: 'You signed up successfully.'
+        });
+        this.context.router.history.push('/'); //跳转方式3
       },
       (response) => {
         this.setState({
@@ -106,4 +116,6 @@ class SignupForm extends Component {
   }
 };
 
-export default withRouter(SignupForm);
+// export default withRouter(SignupForm);
+
+export default SignupForm;
