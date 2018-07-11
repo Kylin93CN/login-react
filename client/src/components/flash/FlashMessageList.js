@@ -10,9 +10,9 @@ class FlashMessageList extends Component {
     deleteFlashMessage: PropTypes.func.isRequired
   };
   render() {
-    const messages = this.props.messages.map(message => {
-      <FlashMessage key={message.id} deleteFlashMessage={this.props.deleteFlashMessage}/>
-    });
+    const messages = this.props.messages.map(message => 
+      <FlashMessage key={message.id} deleteFlashMessage={this.props.deleteFlashMessage} message={message}/>
+    );
     return (
       <div className="container">
         {messages}
