@@ -1,6 +1,9 @@
 import express from 'express';
 import isEmpty from 'lodash/isEmpty';
 import validator from 'validator';
+import bcrypt from 'bcrypt';
+
+import User from '../modles/user';
 
 let router = express.Router();
 
@@ -41,12 +44,18 @@ function validatorInputValue(data){
 router.post('/',(req, res) => {
   const { errors, isValid } = validatorInputValue(req.body);
   //校验失败返回403
-  console.dir(isValid);
   if(!isValid) {
     res.status(403).json(errors);
   }
   // 成功情况
-  res.json({ success: true });
+  const { username, password, email } = req.body;
+  const password_digest = bcrypt.hashSync(password,10);
+
+  User.forge({
+    username, password_digest, email
+  }, { hasTimestamps: true }).save()
+  .then(user => res.json({ success: true }))
+  .catch(error => res.status(500).json({ errors: error }));
 });
 
 export default router;
