@@ -12,7 +12,7 @@ class SignupPage extends Component {
     isUserExists: PropTypes.func.isRequired,
   }
   render() {
-    const { userSignupRequest, addFlashMessage } = this.props;
+    const { userSignupRequest, addFlashMessage, isUserExists } = this.props;
     return (
       <div className="row">
         <div className="col-md-3"></div>

@@ -101,7 +101,7 @@ class SignupForm extends Component {
         <div className="form-group">
           <label className="control-label">Email</label>
           <input
-            type="text"
+            type="email"
             name="email"
             value={this.state.email}
             onChange={this._onChange}

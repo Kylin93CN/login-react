@@ -3,7 +3,7 @@ import isEmpty from 'lodash/isEmpty';
 import validator from 'validator';
 import bcrypt from 'bcrypt';
 
-import User from '../modles/user';
+import User from '../models/user';
 
 let router = express.Router();
 
@@ -48,11 +48,13 @@ const validateInput = (data, otherValidations) => {
     where: { username: data.username},
     orWhere: { email: data.email }
   }).fetch().then(user => {
-    if (user.get('username') === data.username) {
-      errors.username = 'The username has been registed!'
-    }
-    if (user.get('email') === data.email) {
-      errors.email = 'The email has been registed!'
+    if (user) {
+      if (user.get('username') === data.username) {
+        errors.username = 'The username has been registed!'
+      }
+      if (user.get('email') === data.email) {
+        errors.email = 'The email has been registed!'
+      }
     }
     return {
       errors,
@@ -84,13 +86,12 @@ router.post('/',(req, res) => {
 
 // 校验信息唯一性接口
 router.get('/:identifier',(req, res) => {
-  console.log('identifier,identifier-->');
   User.query({
     select: ['username', 'email'],
     where: { username: req.params.identifier },
     orWhere: { email: req.params.identifier },
   }).fetch().then(user => {
-    res.json(user);
+    res.json({ user });
   });
 });
 
