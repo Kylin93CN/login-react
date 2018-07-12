@@ -6,3 +6,10 @@ export const userSignupRequest = (userData) => {
     return axios.post('/api/users',userData);
   }
 };
+
+// 前端验证用户信息唯一性
+export const isUserExists = (identifier) => {
+  return dispatch => {
+    return axios.get(`/api/users/${identifier}`,identifier);
+  }
+};

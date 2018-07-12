@@ -61,7 +61,6 @@ const validateInput = (data, otherValidations) => {
   })
 }
 
-
 router.post('/',(req, res) => {
   validateInput(req.body,commonValidateInput).then(({ errors, isValid }) => {
     /**** 失败情况 返回403***/
@@ -81,6 +80,18 @@ router.post('/',(req, res) => {
     .then(user => res.json({ success: true }))
     .catch(error => res.status(500).json({ errors: error }));
     });
+});
+
+// 校验信息唯一性接口
+router.get('/:identifier',(req, res) => {
+  console.log('identifier,identifier-->');
+  User.query({
+    select: ['username', 'email'],
+    where: { username: req.params.identifier },
+    orWhere: { email: req.params.identifier },
+  }).fetch().then(user => {
+    res.json(user);
+  });
 });
 
 export default router;
