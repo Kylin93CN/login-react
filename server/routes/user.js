@@ -7,8 +7,8 @@ import User from '../modles/user';
 
 let router = express.Router();
 
-// 信息校验
-function validatorInputValue(data){
+// 用户信息输入校验
+const commonValidateInput = (data) => {
   let errors = {};
 
   if(validator.isEmpty(data.username)){
@@ -41,21 +41,45 @@ function validatorInputValue(data){
   }
 }
 
-router.post('/',(req, res) => {
-  const { errors, isValid } = validatorInputValue(req.body);
-  //校验失败返回403
-  if(!isValid) {
-    res.status(403).json(errors);
-  }
-  // 成功情况
-  const { username, password, email } = req.body;
-  const password_digest = bcrypt.hashSync(password,10);
+// 账户、邮箱唯一性校验
+const validateInput = (data, otherValidations) => {
+  const { errors } = otherValidations(data);
+  return User.query({
+    where: { username: data.username},
+    orWhere: { email: data.email }
+  }).fetch().then(user => {
+    if (user.get('username') === data.username) {
+      errors.username = 'The username has been registed!'
+    }
+    if (user.get('email') === data.email) {
+      errors.email = 'The email has been registed!'
+    }
+    return {
+      errors,
+      isValid: isEmpty(errors)
+    }
+  })
+}
 
-  User.forge({
-    username, password_digest, email
-  }, { hasTimestamps: true }).save()
-  .then(user => res.json({ success: true }))
-  .catch(error => res.status(500).json({ errors: error }));
+router.post('/',(req, res) => {
+  validateInput(req.body,commonValidateInput).then(({ errors, isValid }) => {
+    /**** 失败情况 返回403***/
+    if(!isValid) {
+      res.status(403).json(errors);
+      return;
+    }
+    /**** 成功情况 ***/
+    const { username, password, email } = req.body;
+    // 密码加密
+    const password_digest = bcrypt.hashSync(password,10);
+
+    // 存储数据库
+    User.forge({
+      username, password_digest, email
+    }, { hasTimestamps: true }).save()
+    .then(user => res.json({ success: true }))
+    .catch(error => res.status(500).json({ errors: error }));
+    });
 });
 
 export default router;
