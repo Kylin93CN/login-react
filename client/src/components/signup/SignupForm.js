@@ -133,7 +133,7 @@ class SignupForm extends Component {
           {errors.passwordConfirm && <span className="form-text text-muted">{errors.passwordConfirm}</span>}
         </div>
         <div className="form-group">
-          <button disabled={this.state.isLoading} className="btn btn-primary btn-lg">
+          <button disabled={ this.state.isLoading || this.state.isValid } className="btn btn-primary btn-lg">
             Sign up
           </button>
         </div>

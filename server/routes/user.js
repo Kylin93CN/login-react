@@ -7,6 +7,61 @@ import User from '../models/user';
 
 let router = express.Router();
 
+// 查询数据库校验信息唯一性接口
+router.get('/:identifier',(req, res) => {
+  User.query({
+    select: ['username', 'email'],
+    where: { username: req.params.identifier },
+    orWhere: { email: req.params.identifier },
+  }).fetch().then(user => {
+    res.json({ user });
+  });
+});
+
+// 账户、邮箱唯一性校验
+const validateInput = (data, otherValidations) => {
+  const { errors } = otherValidations(data);
+  return User.query({
+    where: { username: data.username},
+    orWhere: { email: data.email }
+  }).fetch().then(user => {
+    if (user) {
+      if (user.get('username') === data.username) {
+        errors.username = 'The username has been registed!'
+      }
+      if (user.get('email') === data.email) {
+        errors.email = 'The email has been registed!'
+      }
+    }
+    return {
+      errors,
+      isValid: isEmpty(errors)
+    }
+  })
+}
+
+// 注册
+router.post('/',(req, res) => {
+  validateInput(req.body,commonValidateInput).then(({ errors, isValid }) => {
+    /**** 失败情况 返回403***/
+    if(!isValid) {
+      res.status(403).json(errors);
+      return;
+    }
+    /**** 成功情况 ***/
+    const { username, password, email } = req.body;
+    // 密码加密
+    const password_digest = bcrypt.hashSync(password,10);
+
+    // 存储数据库
+    User.forge({
+      username, password_digest, email
+    }, { hasTimestamps: true }).save()
+    .then(user => res.json({ success: true }))
+    .catch(error => res.status(500).json({ errors: error }));
+    });
+});
+
 // 用户信息输入校验
 const commonValidateInput = (data) => {
   let errors = {};
@@ -40,59 +95,5 @@ const commonValidateInput = (data) => {
     isValid: isEmpty(errors)
   }
 }
-
-// 账户、邮箱唯一性校验
-const validateInput = (data, otherValidations) => {
-  const { errors } = otherValidations(data);
-  return User.query({
-    where: { username: data.username},
-    orWhere: { email: data.email }
-  }).fetch().then(user => {
-    if (user) {
-      if (user.get('username') === data.username) {
-        errors.username = 'The username has been registed!'
-      }
-      if (user.get('email') === data.email) {
-        errors.email = 'The email has been registed!'
-      }
-    }
-    return {
-      errors,
-      isValid: isEmpty(errors)
-    }
-  })
-}
-
-router.post('/',(req, res) => {
-  validateInput(req.body,commonValidateInput).then(({ errors, isValid }) => {
-    /**** 失败情况 返回403***/
-    if(!isValid) {
-      res.status(403).json(errors);
-      return;
-    }
-    /**** 成功情况 ***/
-    const { username, password, email } = req.body;
-    // 密码加密
-    const password_digest = bcrypt.hashSync(password,10);
-
-    // 存储数据库
-    User.forge({
-      username, password_digest, email
-    }, { hasTimestamps: true }).save()
-    .then(user => res.json({ success: true }))
-    .catch(error => res.status(500).json({ errors: error }));
-    });
-});
-
-// 校验信息唯一性接口
-router.get('/:identifier',(req, res) => {
-  User.query({
-    select: ['username', 'email'],
-    where: { username: req.params.identifier },
-    orWhere: { email: req.params.identifier },
-  }).fetch().then(user => {
-    res.json({ user });
-  });
-});
 
 export default router;
