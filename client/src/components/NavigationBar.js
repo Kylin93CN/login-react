@@ -8,7 +8,7 @@ import { logout } from '../actions/authAction';
 class NavigationBar extends Component {
   static propTypes = {
     auth: PropTypes.object.isRequired,
-    logout: PropTypes.object.isRequired
+    logout: PropTypes.func.isRequired
   }
 
   // 注销事件
