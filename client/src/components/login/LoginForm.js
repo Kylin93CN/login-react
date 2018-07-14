@@ -46,9 +46,7 @@ class LoginForm extends Component {
       // 调整state并发送登录请求
       this.setState({ errors: {}, isLoading: true });
       this.props.login(this.state).then(
-        (res) => {
-          this.context.router.history.push('/');
-        },
+        (res) => this.context.router.history.push('/'),
         (err) => {
           this.setState({
             errors: err.response.data.errors,

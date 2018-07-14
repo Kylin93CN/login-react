@@ -1,17 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import NavigationBar from './components/NavigationBar';
-import FlshMessageList from './components/flash/FlashMessageList';
-import registerServiceWorker from './registerServiceWorker';
+
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import { Provider } from 'react-redux';
 import logger from 'redux-logger';
 
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
+
 import {BrowserRouter as Router} from 'react-router-dom';
+
+import jwtDecode from 'jwt-decode';
+
+import NavigationBar from './components/NavigationBar';
+import FlshMessageList from './components/flash/FlashMessageList';
+import registerServiceWorker from './registerServiceWorker';
+
 import routers from './routers';
 import rootReducer from './reducers';
-import { Provider} from 'react-redux';
+
+import setAuthorizationToken from './utils/setAuthorizationToken';
+import { setCurrenUser } from './actions/loginAction';
+
 
 const store = createStore(
   rootReducer,
@@ -20,9 +30,14 @@ const store = createStore(
   )
 );
 
+if (localStorage.jwtToken) {
+  setAuthorizationToken(localStorage.jwtToken);
+  store.dispatch(setCurrenUser(jwtDecode(localStorage.jwtToken)));
+}
+
 ReactDOM.render(
   <Provider store={ store }>
-    <Router>
+    <Router router={ routers }>
       <div>
         <NavigationBar/>
         <FlshMessageList/>
