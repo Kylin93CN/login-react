@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 
 import users from './routes/user';
 import auth from './routes/auth';
+import addSomething from './routes/addSomething';
 
 let app = express();
 
@@ -16,5 +17,7 @@ app.get('/',(req,res) => {
 app.use('/api/users',users);
 
 app.use('/api/auth',auth);
+
+app.use('/api/addSomething',addSomething);
 
 app.listen(6060,() => console.log('Running on port 6060!'));
