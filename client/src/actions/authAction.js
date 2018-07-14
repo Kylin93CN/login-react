@@ -24,3 +24,11 @@ export const setCurrenUser = (user) => {
     user
   }
 }
+
+export const logout = () => {
+  return dispatch => {
+    localStorage.removeItem('jwtToken');
+    setAuthorizationToken(false);
+    dispatch(setCurrenUser({}));
+  }
+};

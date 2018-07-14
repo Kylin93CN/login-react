@@ -20,7 +20,7 @@ import routers from './routers';
 import rootReducer from './reducers';
 
 import setAuthorizationToken from './utils/setAuthorizationToken';
-import { setCurrenUser } from './actions/loginAction';
+import { setCurrenUser } from './actions/authAction';
 
 
 const store = createStore(
